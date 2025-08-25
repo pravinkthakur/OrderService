@@ -1,18 +1,18 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY . .
-RUN dotnet restore "OrderService/OrderService.csproj"
-RUN dotnet build "OrderService/OrderService.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "OrderService/OrderService.csproj" -c Release -o /app/publish
+# Copy csproj and restore
+COPY OrderService.csproj ./
+RUN dotnet restore OrderService.csproj
 
-FROM base AS final
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish OrderService.csproj -c Release -o /app
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app ./
 ENV ASPNETCORE_URLS=http://+:80
 ENTRYPOINT ["dotnet", "OrderService.dll"]
