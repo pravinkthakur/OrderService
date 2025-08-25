@@ -1,5 +1,19 @@
+# .NET build artifacts
 bin/
 obj/
+
+# User-specific files
 *.user
-*.vspscc
-.vs/
+*.vs
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# Test projects
+OrderService.Tests/
+
+# Git
+.git
+.gitignore
