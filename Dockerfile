@@ -2,12 +2,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore
-COPY OrderService.csproj ./
+# Copy everything into container
+COPY . ./
+
+# Restore
 RUN dotnet restore OrderService.csproj
 
-# Copy everything else and build
-COPY . ./
+# Build & publish
 RUN dotnet publish OrderService.csproj -c Release -o /app
 
 # Runtime stage
